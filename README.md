@@ -35,7 +35,7 @@ This is a full-featured backend system for an Online Banking Application, built 
 
 Below is the complete ERD for the Online Banking System:
 
-![👉 View Interactive ERD on dbdiagram.io](https://dbdiagram.io/d)  
+[👉 View Interactive ERD on dbdiagram.io](https://dbdiagram.io/d)  
 
 ### Key Entities:
 
