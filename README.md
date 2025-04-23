@@ -1,4 +1,4 @@
-# 💰 Online Banking System - Backend
+# 🏦 Online Banking System - Backend
 
 This is a full-featured backend system for an Online Banking Application, built with Java and Spring Boot. It provides secure account management, transaction processing, loan management, and more.
 
@@ -6,7 +6,7 @@ This is a full-featured backend system for an Online Banking Application, built 
 
 ## 📋 Table of Contents
 
-- [💰 Online Banking System - Backend](#-online-banking-system---backend)
+- [🏦 Online Banking System - Backend](#-online-banking-system---backend)
   - [📋 Table of Contents](#-table-of-contents)
   - [✨ Features](#-features)
   - [🗃️ Entity-Relationship Diagram (ERD)](#️-entity-relationship-diagram-erd)
@@ -35,7 +35,7 @@ This is a full-featured backend system for an Online Banking Application, built 
 
 Below is the complete ERD for the Online Banking System:
 
-![ERD](./A_comprehensive_Entity-Relationship_Diagram_(ERD)_.png)
+![👉 View Interactive ERD on dbdiagram.io](https://dbdiagram.io/d)  
 
 ### Key Entities:
 
