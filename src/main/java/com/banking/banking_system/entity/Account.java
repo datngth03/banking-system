@@ -1,5 +1,7 @@
 package com.banking.banking_system.entity;
 
+import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity

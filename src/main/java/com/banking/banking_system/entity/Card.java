@@ -1,7 +1,8 @@
 package com.banking.banking_system.entity;
 
 import java.time.LocalDateTime;
-
+import jakarta.persistence.*;
+import java.time.LocalDate;
 @Entity
 @Table(name = "cards")
 public class Card {

@@ -1,4 +1,6 @@
 package com.banking.banking_system.entity;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "audit_logs")
@@ -17,7 +19,6 @@ public class AuditLog {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
     // getters/setters
 }
 

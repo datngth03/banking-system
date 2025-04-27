@@ -1,5 +1,6 @@
 package com.banking.banking_system.entity;
-
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 @Entity
 @Table(name = "login_sessions")
 public class LoginSession {

@@ -1,5 +1,6 @@
 package com.banking.banking_system.entity;
-
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 @Entity
 @Table(name = "notifications")
 public class Notification {

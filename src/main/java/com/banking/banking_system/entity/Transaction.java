@@ -1,6 +1,9 @@
 package com.banking.banking_system.entity;
 
-
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.math.BigDecimal;
 @Entity
 @Table(name = "transactions")
 public class Transaction {

@@ -1,4 +1,8 @@
 package com.banking.banking_system.entity;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "loans")
