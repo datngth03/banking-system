@@ -18,6 +18,9 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String identityNumber;
+
     @Column(name = "full_name")
     private String fullName;
 
@@ -27,7 +30,7 @@ public class Customer {
     private String phone;
     private String address;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     @Column(name = "password_hash", nullable = false)
