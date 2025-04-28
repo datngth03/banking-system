@@ -1,11 +1,18 @@
 package com.banking.banking_system.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.math.BigDecimal;
+@Data
 @Entity
 @Table(name = "transactions")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,13 +21,9 @@ public class Transaction {
     @Column(nullable = false, unique = true)
     private String transactionCode;
 
-    @ManyToOne
-    @JoinColumn(name = "from_account_id")
-    private Account fromAccount;
+    private Long fromAccountId;
 
-    @ManyToOne
-    @JoinColumn(name = "to_account_id")
-    private Account toAccount;
+    private Long toAccountId;
 
     private String type;
     private BigDecimal amount;
@@ -33,4 +36,3 @@ public class Transaction {
 
     // getters/setters
 }
-
