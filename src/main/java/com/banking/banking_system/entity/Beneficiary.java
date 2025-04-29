@@ -1,23 +1,29 @@
 package com.banking.banking_system.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "beneficiaries")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+
 public class Beneficiary {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    private Long customerId;
 
-    private String name;
-    private String accountNumber;
-    private String bankName;
-    private String ifsc;
+    private String beneficiaryName;
+    private Long beneficiaryAccountId;
+    private String bankName; // hoặc Enum sau này
+    private String branchCode; // hoặc swiftCo
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

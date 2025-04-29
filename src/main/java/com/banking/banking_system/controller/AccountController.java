@@ -8,6 +8,7 @@ import com.banking.banking_system.entity.Account;
 import com.banking.banking_system.entity.Transaction;
 import com.banking.banking_system.service.inter.AccountService;
 import com.banking.banking_system.service.inter.TransactionService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +67,8 @@ public class AccountController {
     }
 
     @PostMapping("/change-status")
-    public ResponseEntity<ResponseDto> changeAccountStatus(@Valid @RequestBody ChangeAccountStatusRequest request) {
-        Account account = accountService.changeAccountStatus(request);
+    public ResponseEntity<ResponseDto> changeAccountStatus(@Valid @RequestBody ChangeAccountStatusRequest request, HttpServletRequest servletRequest) {
+        Account account = accountService.changeAccountStatus(request, servletRequest);
         ResponseDto responseDto = new ResponseDto("SUCCESS", "Account status changed to: " + account.getStatus());
         return ResponseEntity.ok(responseDto);
     }

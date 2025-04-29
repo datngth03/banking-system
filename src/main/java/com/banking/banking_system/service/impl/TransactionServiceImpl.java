@@ -31,7 +31,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AuditLogService auditLogService;
 
-    // Chuyển tiền giữa các tài khoản
     public void transfer(TransferRequest request, HttpServletRequest httpServletRequest) {
         Account fromAccount = findAccountById(request.getFromAccountId());
         Account toAccount = findAccountById(request.getToAccountId());
@@ -62,7 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         // Audit log
         String ipAddress = httpServletRequest.getRemoteAddr();
-        auditLogService.logAction(fromAccount.getCustomerId(), "TRANSFER", "Transferred to account: " + toAccount.getAccountNumber(), ipAddress);
+        auditLogService.log(fromAccount.getCustomerId(), "TRANSFER", "Transferred to account: " + toAccount.getAccountNumber(), ipAddress);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(transaction);
         String ipAddress = httpServletRequest.getRemoteAddr();
-        auditLogService.logAction(account.getCustomerId(), "DEPOSIT", "Deposited amount: " + request.getAmount(), ipAddress);
+        auditLogService.log(account.getCustomerId(), "DEPOSIT", "Deposited amount: " + request.getAmount(), ipAddress);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(transaction);
         String ipAddress = httpServletRequest.getRemoteAddr();
-        auditLogService.logAction(account.getCustomerId(), "WITHDRAWAL", "Withdrawn amount: " + request.getAmount(), ipAddress);
+        auditLogService.log(account.getCustomerId(), "WITHDRAWAL", "Withdrawn amount: " + request.getAmount(), ipAddress);
     }
 
     @Override

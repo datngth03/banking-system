@@ -2,19 +2,22 @@ package com.banking.banking_system.entity;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 @Entity
 @Table(name = "cards")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Card {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
-
-    @ManyToOne @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    private Long accountId;
 
     private String cardType;
 

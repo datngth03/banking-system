@@ -3,10 +3,15 @@ package com.banking.banking_system.service.impl;
 import com.banking.banking_system.dto.request.OtpRequest;
 import com.banking.banking_system.dto.request.RegisterRequest;
 import com.banking.banking_system.dto.response.AuthResponse;
+import com.banking.banking_system.entity.AuditLog;
 import com.banking.banking_system.entity.Customer;
+import com.banking.banking_system.entity.LoginSession;
 import com.banking.banking_system.exception.CustomException;
 import com.banking.banking_system.repository.CustomerRepository;
+import com.banking.banking_system.repository.LoginSessionRepository;
 import com.banking.banking_system.security.JwtTokenProvider;
+import com.banking.banking_system.service.inter.AuditLogService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,13 +28,15 @@ import java.util.Random;
 public class AuthService {
 
     private final CustomerRepository customerRepository;
+    private final LoginSessionRepository loginSessionRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
+    private final AuditLogService auditLogService;
 
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request, HttpServletRequest servletRequest) {
         if (customerRepository.existsByUsername(request.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
@@ -50,6 +57,8 @@ public class AuthService {
 
         customerRepository.save(customer);
 
+        String ipAddress = servletRequest.getHeader("X-Forwarded-For");
+        auditLogService.log(customer.getId(), "REGISTER", "User registered", ipAddress);
 
         String token = jwtTokenProvider.generateToken(customer.getUsername());
         return new AuthResponse(token);
@@ -76,7 +85,7 @@ public class AuthService {
         return "OTP code sent to your email!";
     }
 
-    public AuthResponse verifyOtp(OtpRequest request) {
+    public AuthResponse verifyOtp(OtpRequest request, String ipAddress, String deviceInfo) {
         String savedOtp = OtpStore.getOtp(request.getUsername());
 
         if (savedOtp == null) {
@@ -87,8 +96,13 @@ public class AuthService {
             throw new CustomException("Incorrect OTP entered!");
         }
 
-        // Xóa OTP sau khi verify
+        // Xoá OTP sau khi xác thực
         OtpStore.removeOtp(request.getUsername());
+
+        Customer customer = customerRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        recordLogin(customer.getId(), ipAddress, deviceInfo);
 
         String token = jwtTokenProvider.generateToken(request.getUsername());
         return new AuthResponse(token);
@@ -99,4 +113,13 @@ public class AuthService {
         int otp = 100_000 + random.nextInt(900_000);
         return String.valueOf(otp);
     }
+    public void recordLogin(Long customerId, String ipAddress, String deviceInfo) {
+        LoginSession session = new LoginSession();
+        session.setCustomerId(customerId);
+        session.setIpAddress(ipAddress);
+        session.setDeviceInfo(deviceInfo);
+        session.setLoginTime(LocalDateTime.now());
+        loginSessionRepository.save(session);
+    }
+
 }

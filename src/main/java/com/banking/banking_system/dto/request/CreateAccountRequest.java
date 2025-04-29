@@ -14,5 +14,6 @@ public class CreateAccountRequest {
     private String accountType;
 
     private BigDecimal initialBalance = BigDecimal.valueOf(0.000);
+    private String cardType;
 }
 

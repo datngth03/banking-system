@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class ChangeAccountStatusRequest {
     @NotNull
+    private Long customerId;
+    @NotNull
     private Long accountId;
 
     @NotNull

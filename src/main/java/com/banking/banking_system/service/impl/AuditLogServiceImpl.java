@@ -16,7 +16,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     @Autowired
     private AuditLogRepository auditLogRepository;
 
-    public void logAction(Long customerId, String action, String notes, String ipAddress) {
+    public void log(Long customerId, String action, String notes, String ipAddress) {
         AuditLog log = new AuditLog();
         log.setCustomerId(customerId);
         log.setAction(action);

@@ -1,36 +1,23 @@
-package com.banking.banking_system.entity;
-import jakarta.persistence.*;
+package com.banking.banking_system.dto.response;
+
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-@Entity
-@Table(name = "loans")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Loan {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class LoanResponse {
     private Long id;
-
     private Long customerId;
-
     private String loanType;
     private BigDecimal amount;
     private Float interestRate;
-
     private LocalDate startDate;
     private LocalDate endDate;
     private String status;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    // getters/setters
 }
-
+//
