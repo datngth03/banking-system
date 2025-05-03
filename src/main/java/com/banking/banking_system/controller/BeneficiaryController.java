@@ -3,6 +3,7 @@ package com.banking.banking_system.controller;
 import com.banking.banking_system.dto.request.AddBeneficiaryRequest;
 import com.banking.banking_system.entity.Beneficiary;
 import com.banking.banking_system.service.inter.BeneficiaryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class BeneficiaryController {
     private final BeneficiaryService beneficiaryService;
 
     @PostMapping("/add")
-    public ResponseEntity<Beneficiary> addBeneficiary(@RequestBody AddBeneficiaryRequest request) {
+    public ResponseEntity<Beneficiary> addBeneficiary(@Valid @RequestBody AddBeneficiaryRequest request) {
         Beneficiary beneficiary = beneficiaryService.addBeneficiary(request);
         return ResponseEntity.ok(beneficiary);
     }

@@ -5,6 +5,7 @@ import com.banking.banking_system.dto.request.ChangePasswordRequest;
 import com.banking.banking_system.dto.request.CustomerRequest;
 import com.banking.banking_system.dto.response.ResponseDto;
 import com.banking.banking_system.service.inter.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,14 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
+    @PostMapping
+    public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerRequest request) {
+        CustomerDto createdCustomer = customerService.createCustomer(request);
+        return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody CustomerRequest request) {
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
         return ResponseEntity.ok(customerService.updateCustomerById(id, request));
     }
 

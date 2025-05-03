@@ -11,9 +11,11 @@ import com.banking.banking_system.service.inter.CustomerService;
 import com.banking.banking_system.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -23,6 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+
     @Override
     public CustomerDto getCustomerById(Long id) {
         return customerRepository.findById(id)
@@ -31,15 +35,36 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerDto createCustomer(CustomerRequest request) {
+        Customer customer = Customer.builder()
+                .identityNumber(request.getIdentityNumber())
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .address(request.getAddress())
+                .username(request.getFullName())
+                .passwordHash(passwordEncoder.encode("defaultPass"))
+                .status("ACTIVE")
+                .dateOfBirth(request.getBirthDate())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Customer saved = customerRepository.save(customer);
+        return CustomerMapper.toDto(saved);
+    }
+
+
+    @Override
     public CustomerDto updateCustomerById(Long id, CustomerRequest request) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Customer not found with id: " + id));
 
-        customer.setEmail(request.status());
-        customer.setFullName(request.fullName());
-        customer.setPhone(request.phone());
-        customer.setDateOfBirth(request.birthDate());
-        customer.setAddress(request.address());
+        customer.setEmail(request.getStatus());
+        customer.setFullName(request.getFullName());
+        customer.setPhone(request.getPhone());
+        customer.setDateOfBirth(request.getBirthDate());
+        customer.setAddress(request.getAddress());
 
         Customer updatedCustomer = customerRepository.save(customer);
         return CustomerMapper.toDto(updatedCustomer);

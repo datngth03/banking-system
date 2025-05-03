@@ -1,5 +1,6 @@
 package com.banking.banking_system.controller;
 
+import com.banking.banking_system.dto.request.LoginRequest;
 import com.banking.banking_system.dto.request.OtpRequest;
 import com.banking.banking_system.dto.request.RegisterRequest;
 import com.banking.banking_system.dto.response.AuthResponse;
@@ -31,11 +32,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String  login(@RequestBody @Valid RegisterRequest request) {
+    public String  login(@RequestBody @Valid LoginRequest request) {
         return authService.login(request);
     }
     @PostMapping("/verify-otp")
-    public ResponseEntity<AuthResponse> verifyOtp(@RequestBody OtpRequest request, HttpServletRequest servletRequest) {
+    public ResponseEntity<AuthResponse> verifyOtp(@Valid @RequestBody OtpRequest request, HttpServletRequest servletRequest) {
         String ip = servletRequest.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty()) {
             ip = servletRequest.getRemoteAddr();

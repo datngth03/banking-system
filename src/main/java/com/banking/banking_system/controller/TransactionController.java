@@ -41,7 +41,7 @@ public class TransactionController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<?> getTransactionHistory(@RequestBody TransactionHistoryRequest request) {
+    public ResponseEntity<?> getTransactionHistory(@RequestBody @Valid TransactionHistoryRequest request) {
         List<Transaction> transactions = transactionService.getTransactionHistory(request);
         if (transactions.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No transactions found");

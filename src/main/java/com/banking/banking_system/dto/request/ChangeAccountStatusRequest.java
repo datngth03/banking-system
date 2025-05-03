@@ -1,15 +1,14 @@
 package com.banking.banking_system.dto.request;
 
 import lombok.Data;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 @Data
 public class ChangeAccountStatusRequest {
-    @NotNull
+    @NotNull(message = "Customer ID is required")
     private Long customerId;
-    @NotNull
+    @NotNull(message = "Account ID is required")
     private Long accountId;
-
-    @NotNull
-    private String action; // "lock" hoặc "unlock"
+    @NotNull(message = "Action must be lock or unlock")
+    private String action;
 }

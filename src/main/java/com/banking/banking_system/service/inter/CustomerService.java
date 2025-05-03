@@ -7,6 +7,7 @@ import com.banking.banking_system.dto.response.ResponseDto;
 
 public interface CustomerService {
     CustomerDto getCustomerById(Long id);
+    CustomerDto createCustomer(CustomerRequest request);
     CustomerDto updateCustomerById(Long id, CustomerRequest request);
     ResponseDto changePassword(Long id, ChangePasswordRequest request);
     ResponseDto deleteCustomerById(Long id);

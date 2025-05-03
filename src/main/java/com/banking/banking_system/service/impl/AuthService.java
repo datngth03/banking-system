@@ -1,9 +1,9 @@
 package com.banking.banking_system.service.impl;
 
+import com.banking.banking_system.dto.request.LoginRequest;
 import com.banking.banking_system.dto.request.OtpRequest;
 import com.banking.banking_system.dto.request.RegisterRequest;
 import com.banking.banking_system.dto.response.AuthResponse;
-import com.banking.banking_system.entity.AuditLog;
 import com.banking.banking_system.entity.Customer;
 import com.banking.banking_system.entity.LoginSession;
 import com.banking.banking_system.exception.CustomException;
@@ -11,10 +11,15 @@ import com.banking.banking_system.repository.CustomerRepository;
 import com.banking.banking_system.repository.LoginSessionRepository;
 import com.banking.banking_system.security.JwtTokenProvider;
 import com.banking.banking_system.service.inter.AuditLogService;
+import com.banking.banking_system.service.impl.LoginAttemptService;
+import com.banking.banking_system.service.impl.OtpService;
+
+import com.banking.banking_system.service.impl.LoginSessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,23 +39,28 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
     private final AuditLogService auditLogService;
-
+    private final LoginSessionService loginSessionService;
+    private final LoginAttemptService loginAttemptService;
+    private final OtpService otpService;
 
     public AuthResponse register(RegisterRequest request, HttpServletRequest servletRequest) {
-        if (customerRepository.existsByUsername(request.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+        if (customerRepository.existsByIdentityNumber(request.getIdentityNumber())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "IdentityNumber already exists");
+        }
+        if (customerRepository.existsByPhone(request.getPhone())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Phone number already exists");
         }
 
         Customer customer = Customer.builder()
                 .username(request.getUsername())
-                .identityNumber(request.getIdentityNumber()) // Số CMND/CCCD
+                .identityNumber(request.getIdentityNumber())
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .phone(request.getPhone())
                 .address(request.getAddress())
                 .dateOfBirth(request.getDateOfBirth())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .status("ACTIVE") // Khi đăng ký, mặc định ACTIVE
+                .status("ACTIVE")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -58,53 +68,58 @@ public class AuthService {
         customerRepository.save(customer);
 
         String ipAddress = servletRequest.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = servletRequest.getRemoteAddr();
+        }
         auditLogService.log(customer.getId(), "REGISTER", "User registered", ipAddress);
 
         String token = jwtTokenProvider.generateToken(customer.getUsername());
         return new AuthResponse(token);
     }
 
+    public String login(LoginRequest request) {
+        String phone = request.getPhone();
 
-
-    public String login(RegisterRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        if (loginAttemptService.isBlocked(phone)) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+                    "Too many failed login attempts. Try again in a few minutes.");
+        }
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(phone, request.getPassword())
+            );
+            loginAttemptService.loginSucceeded(phone);
+        } catch (BadCredentialsException ex) {
+            loginAttemptService.loginFailed(phone);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
 
         String otp = generateOtp();
-        OtpStore.saveOtp(request.getUsername(), otp);
+        otpService.saveOtp(request.getPhone(), otp);
 
-        Customer customer = customerRepository.findByUsername(request.getUsername())
+        Customer customer = customerRepository.findByPhone(phone)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         emailService.sendOtpEmail(customer.getEmail(), otp);
-
-        return "OTP code sent to your email!";
+        return "OTP has been sent!";
     }
 
+
     public AuthResponse verifyOtp(OtpRequest request, String ipAddress, String deviceInfo) {
-        String savedOtp = OtpStore.getOtp(request.getUsername());
 
-        if (savedOtp == null) {
-            throw new CustomException("OTP is invalid or expired!");
+        if (otpService.isBlocked(request.getPhone())) {
+            throw new CustomException("Too many failed attempts. Try again later.");
         }
 
-        if (!savedOtp.equals(request.getOtp())) {
-            throw new CustomException("Incorrect OTP entered!");
+        if (!otpService.verifyOtp(request.getPhone(), request.getOtp())) {
+            throw new CustomException("Invalid or expired OTP");
         }
 
-        // Xoá OTP sau khi xác thực
-        OtpStore.removeOtp(request.getUsername());
-
-        Customer customer = customerRepository.findByUsername(request.getUsername())
+        Customer customer = customerRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        recordLogin(customer.getId(), ipAddress, deviceInfo);
+        loginSessionService.recordLogin(customer.getId(), ipAddress, deviceInfo);
 
-        String token = jwtTokenProvider.generateToken(request.getUsername());
+        String token = jwtTokenProvider.generateToken(request.getPhone());
         return new AuthResponse(token);
     }
 
@@ -113,13 +128,6 @@ public class AuthService {
         int otp = 100_000 + random.nextInt(900_000);
         return String.valueOf(otp);
     }
-    public void recordLogin(Long customerId, String ipAddress, String deviceInfo) {
-        LoginSession session = new LoginSession();
-        session.setCustomerId(customerId);
-        session.setIpAddress(ipAddress);
-        session.setDeviceInfo(deviceInfo);
-        session.setLoginTime(LocalDateTime.now());
-        loginSessionRepository.save(session);
-    }
+
 
 }
