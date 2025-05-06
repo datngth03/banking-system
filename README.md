@@ -25,8 +25,6 @@ This is a full-featured backend system for an Online Banking Application, built 
 
 ---
 
-
-
 ## 🚀 Features
 
 This Online Banking System provides core functionalities of digital banking, including:
@@ -119,6 +117,17 @@ Below is the complete ERD for the Online Banking System:
 - **IDE**: VS Code
 
 ---
+```markdown
+## 🛡️ Brute-Force Protection with Redis
+
+This system implements a Redis-based **rate limiting** mechanism using **Bucket4j** to protect against brute-force login attacks. Here’s how it works:
+
+1. **Rate Limiting**: Every login attempt is tracked via a **token bucket** stored in Redis. 
+2. **Redis Configuration**: A unique `clientId` (could be user ID or IP) is used as the key in Redis.
+3. **Login Attempts**: Users can only attempt to login a limited number of times within a fixed period (e.g., 10 attempts within 1 minute).
+4. **Exceeding Attempts**: If the rate limit is exceeded, further login attempts are blocked with a `429 Too Many Requests` response.
+5. **Refill Mechanism**: The token bucket is refilled at a fixed rate (e.g., 10 tokens every minute).
+
 
 ## 🛠️ Getting Started
 
