@@ -14,10 +14,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findByUsername(username)
+        Customer customer = customerRepository.findByPhone(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return User.builder()
-                .username(customer.getUsername())
+                .username(customer.getPhone())
                 .password(customer.getPasswordHash())
                 .build();
     }

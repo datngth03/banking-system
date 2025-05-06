@@ -73,7 +73,7 @@ public class AuthService {
         }
         auditLogService.log(customer.getId(), "REGISTER", "User registered", ipAddress);
 
-        String token = jwtTokenProvider.generateToken(customer.getUsername());
+        String token = jwtTokenProvider.generateToken(customer.getPhone());
         return new AuthResponse(token);
     }
 

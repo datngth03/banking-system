@@ -11,7 +11,6 @@ import java.time.Duration;
 public class OtpService {
 
     private final StringRedisTemplate redisTemplate;
-
     private final Duration otpTtl = Duration.ofMinutes(2);
     private final int MAX_ATTEMPTS = 10;
 
