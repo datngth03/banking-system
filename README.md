@@ -117,7 +117,7 @@ Below is the complete ERD for the Online Banking System:
 - **IDE**: VS Code
 
 ---
-```markdown
+
 ## 🛡️ Brute-Force Protection with Redis
 
 This system implements a Redis-based **rate limiting** mechanism using **Bucket4j** to protect against brute-force login attacks. Here’s how it works:
