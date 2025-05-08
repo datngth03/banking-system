@@ -18,11 +18,13 @@ public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name="transaction_code", nullable = false, unique = true)
     private String transactionCode;
 
+    @Column(name = "from_account_id")
     private Long fromAccountId;
 
+    @Column(name = "to_account_id")
     private Long toAccountId;
 
     private String type;
@@ -31,7 +33,11 @@ public class Transaction {
     private String status;
 
     private LocalDateTime timestamp;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     // getters/setters

@@ -22,10 +22,10 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
     public Beneficiary addBeneficiary(AddBeneficiaryRequest request) {
         Beneficiary beneficiary = new Beneficiary();
         beneficiary.setCustomerId(request.getCustomerId());
-        beneficiary.setBeneficiaryName(request.getBeneficiaryName());
-        beneficiary.setBeneficiaryAccountId(request.getBeneficiaryAccountId());
+        beneficiary.setName(request.getBeneficiaryName());
+        beneficiary.setAccountNumber(request.getBeneficiaryAccountId());
         beneficiary.setBankName(request.getBankName());
-        beneficiary.setBranchCode(request.getBranchCode());
+        beneficiary.setIfsc(request.getBranchCode());
         beneficiary.setCreatedAt(LocalDateTime.now());
         beneficiary.setUpdatedAt(LocalDateTime.now());
 

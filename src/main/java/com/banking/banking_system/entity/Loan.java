@@ -18,19 +18,31 @@ public class Loan {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
+    @Column(name = "loan_type")
     private String loanType;
+
+    @Column(name = "amount")
     private BigDecimal amount;
+
+    @Column(name = "interest_rate")
     private Float interestRate;
 
+    @Column(name = "start_date")
     private LocalDate startDate;
+
+    @Column(name = "end_date")
     private LocalDate endDate;
+
+    @Column(name = "status")
     private String status;
 
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    // getters/setters
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
 

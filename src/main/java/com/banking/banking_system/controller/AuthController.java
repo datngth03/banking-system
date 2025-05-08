@@ -1,5 +1,6 @@
 package com.banking.banking_system.controller;
 
+import com.banking.banking_system.annotation.Ratelimited;
 import com.banking.banking_system.dto.request.LoginRequest;
 import com.banking.banking_system.dto.request.OtpRequest;
 import com.banking.banking_system.dto.request.RegisterRequest;
@@ -30,7 +31,7 @@ public class AuthController {
     public AuthResponse register(@RequestBody @Valid RegisterRequest request, HttpServletRequest servletRequest) {
         return authService.register(request, servletRequest);
     }
-
+    @Ratelimited
     @PostMapping("/login")
     public String  login(@RequestBody @Valid LoginRequest request) {
         return authService.login(request);

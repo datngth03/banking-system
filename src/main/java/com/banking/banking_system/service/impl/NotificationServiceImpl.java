@@ -20,7 +20,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = new Notification();
         notification.setCustomerId(customerId);
         notification.setTitle(title);
-        notification.setContent(content);
+        notification.setMessage(content);
         notification.setCreatedAt(LocalDateTime.now());
         notificationRepository.save(notification);
     }

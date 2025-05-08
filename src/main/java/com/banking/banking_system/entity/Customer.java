@@ -18,7 +18,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "identity_number",unique = true, nullable = false)
     private String identityNumber;
 
     @Column(name = "full_name")

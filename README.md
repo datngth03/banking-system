@@ -103,14 +103,13 @@ Below is the complete ERD for the Online Banking System:
 - **Language**: Java 21  
 - **Framework (Backend)**: Spring Boot  
 - **ORM**: Hibernate / JPA  
-- **Database**: PostgreSQL *(or MySQL)*  
+- **Database**: PostgreSQL 
 - **Authentication & Authorization**: Spring Security with JWT  
-- **Session Management**: Redis *(optional - for session storage if not using JWT)*  
+- **Session Management**: Redis 
 - **Build Tool**: Maven  
-- **Logging**: SLF4J + Logback  
+- **Logging**: Logback  
 - **Unit Testing**: JUnit + Mockito  
-- **API Documentation**: Swagger / SpringDoc OpenAPI  
-<!-- - **Database Migration**: Flyway or Liquibase   -->
+- **API Documentation**: Swagger 
 - **Version Control**: Git + GitHub  
 - **Dev Tools**: Spring Boot DevTools  
 - **ERD Tool**: [dbdiagram.io](https://dbdiagram.io)  

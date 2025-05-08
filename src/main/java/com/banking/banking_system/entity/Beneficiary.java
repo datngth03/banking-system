@@ -18,16 +18,25 @@ public class Beneficiary {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    private String beneficiaryName;
-    private Long beneficiaryAccountId;
-    private String bankName; // hoặc Enum sau này
-    private String branchCode; // hoặc swiftCo
+    @Column(name = "name")
+    private String name;
 
+    @Column(name = "account_number")
+    private Long accountNumber;
+
+    @Column(name = "bank_name")
+    private String bankName;
+
+    @Column(name = "ifsc")
+    private String ifsc;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    // getters/setters
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
 
