@@ -7,13 +7,9 @@ from sqlalchemy import text
 from datetime import datetime, date, timedelta
 import random
 
-# URL của file CSV trên GitHub (sử dụng link raw)
-
-
 # Cấu hình kết nối cơ sở dữ liệu
 DATABASE_URI = 'postgresql://postgres:datnt@localhost:5432/banking_db'
 
-# Kết nối đến cơ sở dữ liệu PostgreSQL
 engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -154,7 +150,7 @@ def generate_unique_card_number(card_type):
         prefix = str(random.choice([34, 37]))
         length = 15
     else:
-        prefix = "9"  # default for unknown
+        prefix = "9"  
         length = 16
 
     remaining_length = length - len(prefix)
