@@ -1,4 +1,4 @@
-package com.banking.banking_system.service.impl;
+package com.banking.banking_system.service;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

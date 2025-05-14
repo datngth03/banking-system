@@ -1,4 +1,4 @@
-package com.banking.banking_system.service.impl;
+package com.banking.banking_system.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

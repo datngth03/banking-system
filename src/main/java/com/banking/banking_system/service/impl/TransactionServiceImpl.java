@@ -6,9 +6,11 @@ import com.banking.banking_system.dto.request.TransferRequest;
 import com.banking.banking_system.entity.Account;
 import com.banking.banking_system.entity.AuditLog;
 import com.banking.banking_system.entity.Transaction;
+import com.banking.banking_system.mapper.TransactionMapper;
 import com.banking.banking_system.repository.AccountRepository;
 import com.banking.banking_system.repository.AuditLogRepository;
 import com.banking.banking_system.repository.TransactionRepository;
+import com.banking.banking_system.repository.TransactionSearchRepository;
 import com.banking.banking_system.service.inter.AuditLogService;
 import com.banking.banking_system.service.inter.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +32,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final AuditLogService auditLogService;
+    private final TransactionSearchRepository transactionElasticsearchRepository;
+    @Autowired
+    private AuditLogRepository auditLogRepository;
 
     public void transfer(TransferRequest request, HttpServletRequest httpServletRequest) {
         Account fromAccount = findAccountById(request.getFromAccountId());
@@ -58,6 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTimestamp(LocalDateTime.now());
 
         transactionRepository.save(transaction);
+        transactionElasticsearchRepository.save(TransactionMapper.toElasticsearchDocument(transaction));
+
 
         // Audit log
         String ipAddress = httpServletRequest.getRemoteAddr();
@@ -83,6 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTimestamp(LocalDateTime.now());
 
         transactionRepository.save(transaction);
+        transactionElasticsearchRepository.save(TransactionMapper.toElasticsearchDocument(transaction));
         String ipAddress = httpServletRequest.getRemoteAddr();
         auditLogService.log(account.getCustomerId(), "DEPOSIT", "Deposited amount: " + request.getAmount(), ipAddress);
     }
@@ -110,6 +118,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTimestamp(LocalDateTime.now());
 
         transactionRepository.save(transaction);
+        transactionElasticsearchRepository.save(TransactionMapper.toElasticsearchDocument(transaction));
         String ipAddress = httpServletRequest.getRemoteAddr();
         auditLogService.log(account.getCustomerId(), "WITHDRAWAL", "Withdrawn amount: " + request.getAmount(), ipAddress);
     }

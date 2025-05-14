@@ -1,6 +1,6 @@
 package com.banking.banking_system.service.impl;
 
-import com.banking.banking_system.dto.LoanPaymentSchedule;
+import com.banking.banking_system.model.LoanPaymentSchedule;
 import com.banking.banking_system.dto.request.LoanRequest;
 import com.banking.banking_system.entity.Loan;
 import com.banking.banking_system.repository.LoanRepository;

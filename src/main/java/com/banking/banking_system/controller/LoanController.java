@@ -1,9 +1,8 @@
 package com.banking.banking_system.controller;
 
-import com.banking.banking_system.dto.LoanPaymentSchedule;
+import com.banking.banking_system.model.LoanPaymentSchedule;
 import com.banking.banking_system.dto.request.LoanRequest;
 import com.banking.banking_system.dto.response.LoanResponse;
-import com.banking.banking_system.dto.response.ResponseDto;
 import com.banking.banking_system.entity.Loan;
 import com.banking.banking_system.service.impl.LoanService;
 import jakarta.validation.Valid;

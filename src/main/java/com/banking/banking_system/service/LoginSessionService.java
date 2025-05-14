@@ -1,4 +1,4 @@
-package com.banking.banking_system.service.impl;
+package com.banking.banking_system.service;
 
 import com.banking.banking_system.entity.LoginSession;
 import com.banking.banking_system.repository.LoginSessionRepository;
