@@ -1,8 +1,79 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: banking_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: datnt
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+
   redis:
     image: redis:latest
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - backend
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    networks:
+      - backend
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - backend
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/banking_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: datnt
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
+    networks:
+      - backend
+
+volumes:
+  pgdata:
+  esdata:
+
+networks:
+  backend:
+    driver: bridge
